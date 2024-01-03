@@ -1,0 +1,18 @@
+# Angular build artifacts
+/dist/
+/out-tsc/
+
+# Angular development artifacts
+/.angular/
+
+# Node modules
+/node_modules/
+
+# IDE - VSCode
+.vscode/
+
+# MacOS
+.DS_Store
+
+# Other common ignore files
+*.log
