@@ -64,8 +64,17 @@ export class MapComponent implements AfterViewInit {
   }
 
   private plotAccidentsOnMap(accidents: Accident[], L: LeafletType): void {
+    const icon = L.icon({
+      iconUrl: 'assets/images/marker-icon.png',
+      shadowUrl: 'assets/images/marker-shadow.png',
+      iconSize: [20, 30],
+      iconAnchor: [10, 30],
+      popupAnchor: [0, -30],
+      shadowSize: [30, 30]
+    });
+  
     accidents.forEach((accident) => {
-      const marker = L.marker([accident.latitude, accident.longitude]);
+      const marker = L.marker([accident.latitude, accident.longitude], { icon: icon });
       marker.bindPopup(this.createPopupContent(accident));
       marker.addTo(this.map);
     });
