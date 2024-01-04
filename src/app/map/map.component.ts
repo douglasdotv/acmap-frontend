@@ -87,6 +87,13 @@ export class MapComponent implements AfterViewInit {
                ? accident.operator + ' Flight ' + numericFlightNumber
                : accident.operator;
 
+    const accidentDate = new Date(accident.date + 'T00:00:00');
+    const formattedAccidentDate = accidentDate.toLocaleDateString('en-US', { 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    });
+
     accident.categories.sort((a, b) => a.localeCompare(b));
     let accidentCategories = accident.categories
                 .map((category, index) => index === 0 ? category : category.toLowerCase())
@@ -106,7 +113,7 @@ export class MapComponent implements AfterViewInit {
   
     return `<div class="popup-content">
               <p class="popup-title">${popupTitle}</p>
-              <p><strong>Date:</strong> ${accident.date}</p>
+              <p><strong>Date:</strong> ${formattedAccidentDate}</p>
               <p><strong>Location:</strong> ${accident.location} (${accident.country})</p>
               <p><strong>Occupants:</strong> ${accident.occupants}</p>
               <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
