@@ -1,1 +1,26 @@
-/* You can add global styles to this file, and also import other style files */
+.popup-content {
+  font-family: 'Tahoma', sans-serif;
+  color: #333;
+  max-width: px;
+
+  p {
+    margin: 10px 0;
+    line-height: 1.2;
+  }
+}
+
+.popup-title {
+  font-size: 16px;
+  margin: 0 0 10px 0;
+  color: #007bff;
+}
+
+.popup-link {
+  display: inline-block;
+  color: #007bff;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

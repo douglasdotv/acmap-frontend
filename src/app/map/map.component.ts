@@ -104,18 +104,18 @@ export class MapComponent implements AfterViewInit {
     const googleSearchUrl = 
       'https://www.google.com/search?q=' + encodeURIComponent(popupTitle);
   
-    return `<div>
-              <p>${popupTitle}</p>
+    return `<div class="popup-content">
+              <p class="popup-title">${popupTitle}</p>
               <p><strong>Date:</strong> ${accident.date}</p>
               <p><strong>Location:</strong> ${accident.location} (${accident.country})</p>
               <p><strong>Occupants:</strong> ${accident.occupants}</p>
               <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
-              <p><strong>Aircraft:</strong> ${accident.aircraftModel} <a href="${aircraftRegistrationUrl}" target="_blank">(${accident.aircraftRegistration})</a></p>
-              <p><strong>Route:</strong> ${accident.departureAirportCity}, ${accident.departureAirportCountry} <a href="${departureAirportUrl}" target="_blank">(${accident.departureAirportIcao})</a> to ${accident.destinationAirportCity}, ${accident.destinationAirportCountry} <a href="${destinationAirportUrl}" target="_blank">(${accident.destinationAirportIcao})</a></p>
+              <p><strong>Aircraft:</strong> ${accident.aircraftModel} <a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">(${accident.aircraftRegistration})</a></p>
+              <p><strong>Route:</strong> ${accident.departureAirportCity}, ${accident.departureAirportCountry} <a href="${departureAirportUrl}" target="_blank" class="popup-link">(${accident.departureAirportIcao})</a> to ${accident.destinationAirportCity}, ${accident.destinationAirportCountry} <a href="${destinationAirportUrl}" target="_blank" class="popup-link">(${accident.destinationAirportIcao})</a></p>
               <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
               <p><strong>Summary:</strong> ${accidentCategories}</p>
               <p><strong>Description:</strong> ${accident.description}</p>
-              <a href="${googleSearchUrl}" target="_blank">More</a>
+              <a href="${googleSearchUrl}" target="_blank" class="popup-link">More</a>
             </div>`;
   }
 }
