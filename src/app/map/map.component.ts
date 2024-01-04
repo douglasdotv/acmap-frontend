@@ -1,5 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
+import { Accident } from './model/accident';
+import { AccidentService } from './service/accident.service';
 
 type LeafletType = typeof import('leaflet');
 
@@ -13,7 +15,17 @@ type LeafletType = typeof import('leaflet');
 export class MapComponent implements AfterViewInit {
   @ViewChild('map') private mapElement!: ElementRef;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
+  private map!: L.Map;
+
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private accidentService: AccidentService) {}
+
+  async ngAfterViewInit(): Promise<void> {
+    const L = await this.loadLeaflet();
+    if (L) {
+      this.initMap(L);
+      this.fetchAndPlotAccidents(L);
+    }
+  }
 
   private async loadLeaflet(): Promise<LeafletType | null> {
     if (isPlatformBrowser(this.platformId)) {
@@ -23,7 +35,7 @@ export class MapComponent implements AfterViewInit {
   }
 
   private initMap(L: LeafletType): void {
-    const map = L.map(this.mapElement.nativeElement, {
+    this.map = L.map(this.mapElement.nativeElement, {
       center: [0, 0],
       zoom: 2,
       minZoom: 3,
@@ -39,13 +51,29 @@ export class MapComponent implements AfterViewInit {
       }
     );
 
-    USGS_USImagery.addTo(map);
+    USGS_USImagery.addTo(this.map);
   }
 
-  async ngAfterViewInit(): Promise<void> {
-    const L = await this.loadLeaflet();
-    if (L) {
-      this.initMap(L);
-    }
+  private fetchAndPlotAccidents(L: LeafletType): void {
+    this.accidentService.getAllAccidents().subscribe({
+      next: (accidents) => {
+        this.plotAccidentsOnMap(accidents, L);
+      },
+      error: (err) => console.error(err),
+    });
+  }
+
+  private plotAccidentsOnMap(accidents: Accident[], L: LeafletType): void {
+    accidents.forEach((accident) => {
+      const marker = L.marker([accident.latitude, accident.longitude]);
+      marker.bindPopup(this.createPopupContent(accident));
+      marker.addTo(this.map);
+    });
+  }
+
+  private createPopupContent(accident: Accident): string {
+    return `
+      <p>${accident.flightNumber}</p>
+    `;
   }
 }
