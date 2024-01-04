@@ -81,8 +81,41 @@ export class MapComponent implements AfterViewInit {
   }
 
   private createPopupContent(accident: Accident): string {
-    return `
-      <p>${accident.flightNumber}</p>
-    `;
+    const flightNumberMatch = /\d+/.exec(accident.flightNumber)
+    const numericFlightNumber = flightNumberMatch ? flightNumberMatch[0] : '';
+    const popupTitle = numericFlightNumber
+               ? accident.operator + ' Flight ' + numericFlightNumber
+               : accident.operator;
+
+    accident.categories.sort((a, b) => a.localeCompare(b));
+    let accidentCategories = accident.categories
+                .map((category, index) => index === 0 ? category : category.toLowerCase())
+                .join(', ');
+    if (accident.disputed) {
+        accidentCategories += ' (disputed)';
+    }
+    
+    const aircraftRegistrationUrl = 
+      'https://www.airliners.net/search?keywords=' + accident.aircraftRegistration;
+    const departureAirportUrl = 
+      'https://www.world-airport-codes.com/search/?s=' + accident.departureAirportIcao;
+    const destinationAirportUrl = 
+      'https://www.world-airport-codes.com/search/?s=' + accident.destinationAirportIcao;
+    const googleSearchUrl = 
+      'https://www.google.com/search?q=' + encodeURIComponent(popupTitle);
+  
+    return `<div>
+              <p>${popupTitle}</p>
+              <p><strong>Date:</strong> ${accident.date}</p>
+              <p><strong>Location:</strong> ${accident.location} (${accident.country})</p>
+              <p><strong>Occupants:</strong> ${accident.occupants}</p>
+              <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
+              <p><strong>Aircraft:</strong> ${accident.aircraftModel} <a href="${aircraftRegistrationUrl}" target="_blank">(${accident.aircraftRegistration})</a></p>
+              <p><strong>Route:</strong> ${accident.departureAirportCity}, ${accident.departureAirportCountry} <a href="${departureAirportUrl}" target="_blank">(${accident.departureAirportIcao})</a> to ${accident.destinationAirportCity}, ${accident.destinationAirportCountry} <a href="${destinationAirportUrl}" target="_blank">(${accident.destinationAirportIcao})</a></p>
+              <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
+              <p><strong>Summary:</strong> ${accidentCategories}</p>
+              <p><strong>Description:</strong> ${accident.description}</p>
+              <a href="${googleSearchUrl}" target="_blank">More</a>
+            </div>`;
   }
 }
