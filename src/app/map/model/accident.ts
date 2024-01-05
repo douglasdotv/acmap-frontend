@@ -2,7 +2,7 @@ export interface Accident {
   date: string;
   operator: string;
   flightNumber: string;
-  aircraftModel: string;
+  aircraftType: string;
   aircraftRegistration: string;
   occupants: number;
   fatalities: number;
@@ -18,6 +18,6 @@ export interface Accident {
   destinationAirportCountry: string;
   flightPhase: string;
   description: string;
-  disputed: boolean;
+  isDisputed: boolean;
   categories: string[];
 }

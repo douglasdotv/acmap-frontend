@@ -98,7 +98,7 @@ export class MapComponent implements AfterViewInit {
     let accidentCategories = accident.categories
                 .map((category, index) => index === 0 ? category : category.toLowerCase())
                 .join(', ');
-    if (accident.disputed) {
+    if (accident.isDisputed) {
         accidentCategories += ' (disputed)';
     }
     
@@ -117,7 +117,7 @@ export class MapComponent implements AfterViewInit {
               <p><strong>Location:</strong> ${accident.location} (${accident.country})</p>
               <p><strong>Occupants:</strong> ${accident.occupants}</p>
               <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
-              <p><strong>Aircraft:</strong> ${accident.aircraftModel} <a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">(${accident.aircraftRegistration})</a></p>
+              <p><strong>Aircraft:</strong> ${accident.aircraftType} <a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">(${accident.aircraftRegistration})</a></p>
               <p><strong>Route:</strong> ${accident.departureAirportCity}, ${accident.departureAirportCountry} <a href="${departureAirportUrl}" target="_blank" class="popup-link">(${accident.departureAirportIcao})</a> to ${accident.destinationAirportCity}, ${accident.destinationAirportCountry} <a href="${destinationAirportUrl}" target="_blank" class="popup-link">(${accident.destinationAirportIcao})</a></p>
               <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
               <p><strong>Summary:</strong> ${accidentCategories}</p>
