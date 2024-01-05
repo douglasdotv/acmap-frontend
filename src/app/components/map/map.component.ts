@@ -1,7 +1,7 @@
 import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
-import { Accident } from './model/accident';
-import { AccidentService } from './service/accident.service';
+import { Accident } from '../../models/accident';
+import { AccidentService } from '../../services/accident.service';
 
 type LeafletType = typeof import('leaflet');
 
