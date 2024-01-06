@@ -2,9 +2,22 @@
   <div class="container-fluid">
     <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
       <input formControlName="fatalities" type="number" class="form-control me-2" placeholder="Fatalities">
-      <input formControlName="operator" type="text" class="form-control me-2" placeholder="Operator">
-      <input formControlName="aircraftType" type="text" class="form-control me-2" placeholder="Aircraft type">
-      <input formControlName="accidentCategory" type="text" class="form-control me-2" placeholder="Category">
+
+      <select formControlName="operator" class="form-select me-2">
+        <option value="">Operator</option>
+        <option *ngFor="let operator of operators" [value]="operator">{{ operator }}</option>
+      </select>
+
+      <select formControlName="aircraftType" class="form-select me-2">
+        <option value="">Aircraft</option>
+        <option *ngFor="let aircraftType of aircraftTypes" [value]="aircraftType">{{ aircraftType }}</option>
+      </select>
+
+      <select formControlName="accidentCategory" class="form-select me-2">
+        <option value="">Category</option>
+        <option *ngFor="let accidentCategory of accidentCategories" [value]="accidentCategory">{{ accidentCategory }}</option>
+      </select>
+
       <button type="submit" class="btn btn-outline-success">Filter</button>
     </form>
   </div>
