@@ -14,4 +14,16 @@ export class AccidentService {
   getAllAccidents(): Observable<Accident[]> {
     return this.http.get<Accident[]>(this.API_URL);
   }
+
+  getOperators(): Observable<string[]> {
+    return this.http.get<string[]>(this.API_URL + '/operators');
+  }
+
+  getAircraftTypes(): Observable<string[]> {
+    return this.http.get<string[]>(this.API_URL + '/aircraft-types');
+  }
+
+  getCategories(): Observable<string[]> {
+    return this.http.get<string[]>(this.API_URL + '/categories');
+  }
 }
