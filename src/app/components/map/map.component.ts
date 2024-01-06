@@ -2,7 +2,9 @@ import { isPlatformBrowser } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, PLATFORM_ID, ViewChild } from '@angular/core';
 import { Accident } from '../../models/accident';
 import { AccidentService } from '../../services/accident.service';
+import { MapDataService } from '../../services/map-data.service';
 
+declare let L: any;
 type LeafletType = typeof import('leaflet');
 
 @Component({
@@ -17,13 +19,14 @@ export class MapComponent implements AfterViewInit {
 
   private map!: L.Map;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private accidentService: AccidentService) {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object, private accidentService: AccidentService, private mapDataService: MapDataService) {}
 
   async ngAfterViewInit(): Promise<void> {
     const L = await this.loadLeaflet();
     if (L) {
       this.initMap(L);
       this.fetchAndPlotAccidents(L);
+      this.subscribeToAccidentUpdates(L);
     }
   }
 
@@ -124,5 +127,20 @@ export class MapComponent implements AfterViewInit {
               <p><strong>Description:</strong> ${accident.description}</p>
               <a href="${googleSearchUrl}" target="_blank" class="popup-link">More</a>
             </div>`;
+  }
+
+  private subscribeToAccidentUpdates(L: LeafletType): void {
+    this.mapDataService.currentAccidents.subscribe((accidents) => {
+      this.clearMap();
+      this.plotAccidentsOnMap(accidents, L);
+    });
+  }
+
+  private clearMap(): void {
+    this.map.eachLayer((layer) => {
+      if (layer instanceof L.Marker) {
+        this.map.removeLayer(layer);
+      }
+    });
   }
 }
