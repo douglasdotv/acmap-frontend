@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Accident } from '../models/accident';
+import { SearchForm } from '../models/search-form';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,10 @@ export class AccidentService {
 
   getAllAccidents(): Observable<Accident[]> {
     return this.http.get<Accident[]>(this.API_URL);
+  }
+
+  searchAccidents(form: SearchForm): Observable<Accident[]> {
+    return this.http.post<Accident[]>(`${this.API_URL}/search`, form);
   }
 
   getOperators(): Observable<string[]> {
