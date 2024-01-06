@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AccidentService } from '../../services/accident.service';
 import { CommonModule } from '@angular/common';
+import { MapDataService } from '../../services/map-data.service';
 
 @Component({
   selector: 'app-navbar',
@@ -17,7 +18,7 @@ export class NavbarComponent implements OnInit {
   aircraftTypes: string[] = [];
   accidentCategories: string[] = [];
 
-  constructor(private fb: FormBuilder, private accidentService: AccidentService) {}
+  constructor(private fb: FormBuilder, private accidentService: AccidentService, private mapDataService: MapDataService) {}
 
   ngOnInit(): void {
     this.initForm();
@@ -68,7 +69,13 @@ export class NavbarComponent implements OnInit {
 
   onSearch(): void {
     if (this.searchForm.valid) {
-      console.log(this.searchForm.value);
+      const form = this.searchForm.value;
+      this.accidentService.searchAccidents(form).subscribe({
+        next: (accidents) => {
+          this.mapDataService.updateAccidents(accidents);
+        },
+        error: (err) => console.error(err),
+      });
     }
   }
 }
