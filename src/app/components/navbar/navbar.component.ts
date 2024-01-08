@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AccidentService } from '../../services/accident.service';
 import { CommonModule } from '@angular/common';
 import { MapDataService } from '../../services/map-data.service';
@@ -27,7 +27,7 @@ export class NavbarComponent implements OnInit {
 
   private initForm(): void {
     this.searchForm = this.fb.group({
-      fatalities: [''],
+      fatalities: ['', [Validators.min(0)]],
       operator: [''],
       aircraftType: [''],
       accidentCategory: [''],
