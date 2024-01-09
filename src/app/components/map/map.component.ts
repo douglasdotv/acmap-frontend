@@ -22,19 +22,11 @@ export class MapComponent implements AfterViewInit {
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private accidentService: AccidentService, private mapDataService: MapDataService) {}
 
   async ngAfterViewInit(): Promise<void> {
-    const L = await this.loadLeaflet();
-    if (L) {
+    if (isPlatformBrowser(this.platformId) && L) {
       this.initMap(L);
       this.fetchAndPlotAccidents(L);
       this.subscribeToAccidentUpdates(L);
     }
-  }
-
-  private async loadLeaflet(): Promise<LeafletType | null> {
-    if (isPlatformBrowser(this.platformId)) {
-      return import('leaflet');
-    }
-    return null;
   }
 
   private initMap(L: LeafletType): void {
