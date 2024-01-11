@@ -70,12 +70,8 @@ export class NavbarComponent implements OnInit {
   onSearch(): void {
     if (this.searchForm.valid) {
       const form = this.searchForm.value;
-      this.accidentService.searchAccidents(form).subscribe({
-        next: (accidents) => {
-          this.mapDataService.updateAccidents(accidents);
-        },
-        error: (err) => console.error(err),
-      });
+      const filteredAccidents = this.accidentService.filterAccidents(form);
+      this.mapDataService.updateAccidents(filteredAccidents);
     }
   }
 }
