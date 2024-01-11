@@ -22,7 +22,12 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
     this.initForm();
-    this.loadDropdownData();
+    this.accidentService.accidents$.subscribe({
+      next: () => {
+        this.loadDropdownData();
+      },
+      error: (err) => console.error(err),
+    });
   }
 
   private initForm(): void {
@@ -35,36 +40,9 @@ export class NavbarComponent implements OnInit {
   }
 
   private loadDropdownData(): void {
-    this.fetchOperators();
-    this.fetchAircraftTypes();
-    this.fetchCategories();
-  }
-
-  private fetchOperators(): void {
-    this.accidentService.getOperators().subscribe({
-      next: (operators) => {
-        this.operators = operators;
-      },
-      error: (err) => console.error(err),
-    });
-  }
-
-  private fetchAircraftTypes(): void {
-    this.accidentService.getAircraftTypes().subscribe({
-      next: (aircraftTypes) => {
-        this.aircraftTypes = aircraftTypes;
-      },
-      error: (err) => console.error(err),
-    });
-  }
-
-  private fetchCategories(): void {
-    this.accidentService.getCategories().subscribe({
-      next: (categories) => {
-        this.accidentCategories = categories;
-      },
-      error: (err) => console.error(err),
-    });
+    this.operators = this.accidentService.getOperators();
+    this.aircraftTypes = this.accidentService.getAircraftTypes();
+    this.accidentCategories = this.accidentService.getCategories();
   }
 
   onSearch(): void {
