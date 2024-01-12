@@ -23,10 +23,15 @@ export class MapComponent implements AfterViewInit {
 
   async ngAfterViewInit(): Promise<void> {
     if (isPlatformBrowser(this.platformId) && L) {
+      this.importLeafletMarkerCluster();
       this.initMap(L);
       this.fetchAndPlotAccidents(L);
       this.subscribeToAccidentUpdates(L);
     }
+  }
+
+  private async importLeafletMarkerCluster(): Promise<void> {
+    await import('leaflet.markercluster');
   }
 
   private initMap(L: LeafletType): void {
@@ -67,7 +72,7 @@ export class MapComponent implements AfterViewInit {
       popupAnchor: [0, -30],
       shadowSize: [30, 30]
     });
-  
+
     accidents.forEach((accident) => {
       const marker = L.marker([accident.latitude, accident.longitude], { icon: icon });
       marker.bindPopup(this.createPopupContent(accident));
