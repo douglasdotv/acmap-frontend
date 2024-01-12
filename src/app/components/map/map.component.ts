@@ -79,7 +79,6 @@ export class MapComponent implements AfterViewInit {
       const marker = L.marker([accident.latitude, accident.longitude], { icon: icon });
       marker.bindPopup(this.createPopupContent(accident));
       marker.on(('mouseover'), () => marker.openPopup());
-      marker.on(('mouseout'), () => marker.closePopup());
       markers.addLayer(marker);
     });
 
