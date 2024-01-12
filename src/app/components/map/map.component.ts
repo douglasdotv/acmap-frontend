@@ -76,36 +76,24 @@ export class MapComponent implements AfterViewInit {
   }
 
   private createPopupContent(accident: Accident): string {
-    const flightNumberMatch = /\d+/.exec(accident.flightNumber)
+    const flightNumberMatch = /\d+/.exec(accident.flightNumber);
     const numericFlightNumber = flightNumberMatch ? flightNumberMatch[0] : '';
-    const popupTitle = numericFlightNumber
-               ? accident.operator + ' Flight ' + numericFlightNumber
-               : accident.operator;
+    const popupTitle = numericFlightNumber ? accident.operator + ' Flight ' + numericFlightNumber : accident.operator;
 
     const accidentDate = new Date(accident.date + 'T00:00:00');
-    const formattedAccidentDate = accidentDate.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    });
+    const formattedAccidentDate = accidentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
 
     accident.categories.sort((a, b) => a.localeCompare(b));
-    let accidentCategories = accident.categories
-                .map((category, index) => index === 0 ? category : category.toLowerCase())
-                .join(', ');
-    if (accident.isDisputed) {
-        accidentCategories += ' (disputed)';
-    }
+    const accidentCategories = accident.categories.map((category, index) => index === 0 ? category : category.toLowerCase()).join(', ');
+    const disputedText = accident.isDisputed ? ' (disputed)' : '';
     
-    const aircraftRegistrationUrl = 
-      'https://www.airliners.net/search?keywords=' + accident.aircraftRegistration;
-    const departureAirportUrl = 
-      'https://www.world-airport-codes.com/search/?s=' + accident.departureAirportIcao;
-    const destinationAirportUrl = 
-      'https://www.world-airport-codes.com/search/?s=' + accident.destinationAirportIcao;
-    const googleSearchUrl = 
-      'https://www.google.com/search?q=' + encodeURIComponent(popupTitle);
-  
+    const aircraftRegistrationUrl = 'https://www.airliners.net/search?keywords=' + accident.aircraftRegistration;
+    const departureAirportUrl = 'https://www.world-airport-codes.com/search/?s=' + accident.departureAirportIcao;
+    const destinationAirportUrl = 'https://www.world-airport-codes.com/search/?s=' + accident.destinationAirportIcao;
+
+    const resourceLinksHtml = accident.resources.map(resource => 
+      `<a href="${resource.url}" target="_blank" class="popup-link">${resource.description}</a>`).join('<br>');
+
     return `<div class="popup-content">
               <p class="popup-title">${popupTitle}</p>
               <p><strong>Date:</strong> ${formattedAccidentDate}</p>
@@ -115,9 +103,9 @@ export class MapComponent implements AfterViewInit {
               <p><strong>Aircraft:</strong> ${accident.aircraftType} <a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">(${accident.aircraftRegistration})</a></p>
               <p><strong>Route:</strong> ${accident.departureAirportCity}, ${accident.departureAirportCountry} <a href="${departureAirportUrl}" target="_blank" class="popup-link">(${accident.departureAirportIcao})</a> to ${accident.destinationAirportCity}, ${accident.destinationAirportCountry} <a href="${destinationAirportUrl}" target="_blank" class="popup-link">(${accident.destinationAirportIcao})</a></p>
               <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
-              <p><strong>Summary:</strong> ${accidentCategories}</p>
+              <p><strong>Summary:</strong> ${accidentCategories}${disputedText}</p>
               <p><strong>Description:</strong> ${accident.description}</p>
-              <a href="${googleSearchUrl}" target="_blank" class="popup-link">More</a>
+              <p><strong>Resources:</strong><br>${resourceLinksHtml}</p>
             </div>`;
   }
 
