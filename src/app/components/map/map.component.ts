@@ -37,7 +37,7 @@ export class MapComponent implements AfterViewInit {
   private initMap(L: LeafletType): void {
     this.map = L.map(this.mapElement.nativeElement, {
       center: [0, 0],
-      zoom: 2,
+      zoom: 3,
       minZoom: 3,
       maxBounds: [[-90, -210], [90, 210]],
       maxBoundsViscosity: 1.0,
