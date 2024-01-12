@@ -73,13 +73,17 @@ export class MapComponent implements AfterViewInit {
       shadowSize: [30, 30]
     });
 
+    const markers = L.markerClusterGroup();
+
     accidents.forEach((accident) => {
       const marker = L.marker([accident.latitude, accident.longitude], { icon: icon });
       marker.bindPopup(this.createPopupContent(accident));
       marker.on(('mouseover'), () => marker.openPopup());
       marker.on(('mouseout'), () => marker.closePopup());
-      marker.addTo(this.map);
+      markers.addLayer(marker);
     });
+
+    this.map.addLayer(markers);
   }
 
   private createPopupContent(accident: Accident): string {
