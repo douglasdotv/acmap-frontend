@@ -1,3 +1,5 @@
+import { AccidentResource } from "./accident-resource";
+
 export interface Accident {
   date: string;
   operator: string;
@@ -20,4 +22,5 @@ export interface Accident {
   description: string;
   isDisputed: boolean;
   categories: string[];
+  resources: AccidentResource[];
 }
