@@ -67,10 +67,10 @@ export class MapComponent implements AfterViewInit {
     const icon = L.icon({
       iconUrl: 'assets/images/marker-icon.png',
       shadowUrl: 'assets/images/marker-shadow.png',
-      iconSize: [20, 30],
-      iconAnchor: [10, 30],
-      popupAnchor: [0, -30],
-      shadowSize: [30, 30]
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowSize: [41, 41],
     });
 
     const markers = L.markerClusterGroup();
