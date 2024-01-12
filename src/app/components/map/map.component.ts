@@ -43,15 +43,12 @@ export class MapComponent implements AfterViewInit {
       maxBoundsViscosity: 1.0,
     });
 
-    const USGS_USImagery = L.tileLayer(
-      'https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}',
-      {
-        maxZoom: 20,
-        attribution: 'Tiles courtesy of the <a href="https://usgs.gov/">U.S. Geological Survey</a>'
-      }
-    );
+    const OpenStreetMap_Mapnik = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    });
 
-    USGS_USImagery.addTo(this.map);
+    OpenStreetMap_Mapnik.addTo(this.map);
   }
 
   private fetchAndPlotAccidents(L: LeafletType): void {
