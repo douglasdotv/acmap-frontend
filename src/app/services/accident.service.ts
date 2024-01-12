@@ -12,7 +12,7 @@ export class AccidentService {
   private readonly API_URL = environment.apiUrl;
   private allAccidents: Accident[] = [];
   private accidentsSubject = new BehaviorSubject<Accident[]>([]);
-  public accidents$ = this.accidentsSubject.asObservable();
+  accidents$ = this.accidentsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
