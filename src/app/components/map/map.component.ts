@@ -3,6 +3,7 @@ import { AfterViewInit, Component, ElementRef, Inject, PLATFORM_ID, ViewChild } 
 import { Accident } from '../../models/accident';
 import { AccidentService } from '../../services/accident.service';
 import { MapDataService } from '../../services/map-data.service';
+import { MarkerClusterGroup } from 'leaflet';
 
 declare let L: any;
 type LeafletType = typeof import('leaflet');
@@ -18,6 +19,7 @@ export class MapComponent implements AfterViewInit {
   @ViewChild('map') private mapElement!: ElementRef;
 
   private map!: L.Map;
+  private markers!: MarkerClusterGroup;
 
   constructor(@Inject(PLATFORM_ID) private platformId: Object, private accidentService: AccidentService, private mapDataService: MapDataService) {}
 
@@ -70,16 +72,16 @@ export class MapComponent implements AfterViewInit {
       shadowSize: [41, 41],
     });
 
-    const markers = L.markerClusterGroup();
+    this.markers = L.markerClusterGroup();
 
     accidents.forEach((accident) => {
       const marker = L.marker([accident.latitude, accident.longitude], { icon: icon });
       marker.bindPopup(this.createPopupContent(accident));
       marker.on(('mouseover'), () => marker.openPopup());
-      markers.addLayer(marker);
+      this.markers.addLayer(marker);
     });
 
-    this.map.addLayer(markers);
+    this.map.addLayer(this.markers);
   }
 
   private createPopupContent(accident: Accident): string {
@@ -129,5 +131,9 @@ export class MapComponent implements AfterViewInit {
         this.map.removeLayer(layer);
       }
     });
+
+    if (this.markers) {
+      this.markers.clearLayers();
+    }
   }
 }
