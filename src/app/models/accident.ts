@@ -1,4 +1,6 @@
 import { AccidentResource } from "./accident-resource";
+import { Airport } from "./airport";
+import { Stopover } from "./stopover";
 
 export interface Accident {
   date: string;
@@ -12,15 +14,12 @@ export interface Accident {
   latitude: number;
   longitude: number;
   country: string;
-  departureAirportIcao: string;
-  departureAirportCity: string;
-  departureAirportCountry: string;
-  destinationAirportIcao: string;
-  destinationAirportCity: string;
-  destinationAirportCountry: string;
+  departureAirport: Airport,
+  destinationAirport: Airport,
   flightPhase: string;
   description: string;
   isDisputed: boolean;
   categories: string[];
   resources: AccidentResource[];
+  stopovers: Stopover[];
 }
