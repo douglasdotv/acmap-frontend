@@ -108,7 +108,7 @@ export class MapComponent implements AfterViewInit {
         if (index !== 0) {
           prefix = isLast ? ' and ' : ', ';
         }
-        return `${prefix}${stopover.airport.city} (<a href="https://www.world-airport-codes.com/search/?s=${stopover.airport.icaoCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
+        return `${prefix}${stopover.airport.city} (<a href="https://www.flightradar24.com/data/airports/${stopover.airport.iataCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
       }).join('') + ')'
     : '';
     const routeHtml = `${accident.departureAirport.city}, ${accident.departureAirport.country} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>) to ${accident.destinationAirport.city}, ${accident.destinationAirport.country} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)<br>${stopoversHtml}`;
