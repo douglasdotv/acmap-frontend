@@ -97,8 +97,15 @@ export class MapComponent implements AfterViewInit {
     const disputedText = accident.isDisputed ? ' (disputed)' : '';
     
     const aircraftRegistrationUrl = 'https://www.airliners.net/search?keywords=' + accident.aircraftRegistration;
-    const departureAirportUrl = 'https://www.world-airport-codes.com/search/?s=' + accident.departureAirportIcao;
-    const destinationAirportUrl = 'https://www.world-airport-codes.com/search/?s=' + accident.destinationAirportIcao;
+
+    const departureAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.departureAirport.iataCode;
+    const destinationAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.destinationAirport.iataCode;
+    const stopoversHtml = accident.stopovers.length > 0
+      ? ' via ' + accident.stopovers.map(stopover => {
+          return `${stopover.airport.city} (<a href="https://www.world-airport-codes.com/search/?s=${stopover.airport.icaoCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
+        }).join(', ')
+      : '';
+    const routeHtml = `${accident.departureAirport.city}, ${accident.departureAirport.country} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>) to ${accident.destinationAirport.city}, ${accident.destinationAirport.country} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)<br>${stopoversHtml}`;
 
     const resourceLinksHtml = accident.resources.map(resource => 
       `<a href="${resource.url}" target="_blank" class="popup-link">${resource.description}</a>`).join('<br>');
@@ -110,7 +117,7 @@ export class MapComponent implements AfterViewInit {
               <p><strong>Occupants:</strong> ${accident.occupants}</p>
               <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
               <p><strong>Aircraft:</strong> ${accident.aircraftType} <a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">(${accident.aircraftRegistration})</a></p>
-              <p><strong>Route:</strong> ${accident.departureAirportCity}, ${accident.departureAirportCountry} <a href="${departureAirportUrl}" target="_blank" class="popup-link">(${accident.departureAirportIcao})</a> to ${accident.destinationAirportCity}, ${accident.destinationAirportCountry} <a href="${destinationAirportUrl}" target="_blank" class="popup-link">(${accident.destinationAirportIcao})</a></p>
+              <p><strong>Route:</strong> ${routeHtml}</p>
               <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
               <p><strong>Summary:</strong> ${accidentCategories}${disputedText}</p>
               <p><strong>Description:</strong> ${accident.description}</p>
