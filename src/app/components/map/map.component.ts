@@ -29,6 +29,7 @@ export class MapComponent implements AfterViewInit {
       this.initMap(L);
       this.fetchAndPlotAccidents(L);
       this.subscribeToAccidentUpdates(L);
+      this.subscribeToResetZoom();
     }
   }
 
@@ -98,13 +99,18 @@ export class MapComponent implements AfterViewInit {
     
     const aircraftRegistrationUrl = 'https://www.airliners.net/search?keywords=' + accident.aircraftRegistration;
 
-    const departureAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.departureAirport.iataCode;
-    const destinationAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.destinationAirport.iataCode;
+    const departureAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.departureAirport.iataCode.toLowerCase();
+    const destinationAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.destinationAirport.iataCode.toLowerCase();
     const stopoversHtml = accident.stopovers.length > 0
-      ? ' via ' + accident.stopovers.map(stopover => {
-          return `${stopover.airport.city} (<a href="https://www.world-airport-codes.com/search/?s=${stopover.airport.icaoCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
-        }).join(', ')
-      : '';
+    ? '(via ' + accident.stopovers.map((stopover, index, array) => {
+        const isLast = index === array.length - 1;
+        let prefix = '';
+        if (index !== 0) {
+          prefix = isLast ? ' and ' : ', ';
+        }
+        return `${prefix}${stopover.airport.city} (<a href="https://www.world-airport-codes.com/search/?s=${stopover.airport.icaoCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
+      }).join('') + ')'
+    : '';
     const routeHtml = `${accident.departureAirport.city}, ${accident.departureAirport.country} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>) to ${accident.destinationAirport.city}, ${accident.destinationAirport.country} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)<br>${stopoversHtml}`;
 
     const resourceLinksHtml = accident.resources.map(resource => 
@@ -130,6 +136,16 @@ export class MapComponent implements AfterViewInit {
       this.clearMap();
       this.plotAccidentsOnMap(accidents, L);
     });
+  }
+
+  private subscribeToResetZoom(): void {
+    this.mapDataService.resetZoom$.subscribe(() => {
+      this.resetMapZoom();
+    });
+  }
+
+  private resetMapZoom(): void {
+    this.map.setView([0, 0], 3);
   }
 
   private clearMap(): void {

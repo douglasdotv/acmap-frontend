@@ -9,7 +9,14 @@ export class MapDataService {
   private accidentSource: BehaviorSubject<Accident[]> = new BehaviorSubject<Accident[]>([]);
   currentAccidents: Observable<Accident[]> = this.accidentSource.asObservable();
 
+  private resetZoomSource = new BehaviorSubject<void>(undefined);
+  resetZoom$: Observable<void> = this.resetZoomSource.asObservable();
+
   updateAccidents(accidents: Accident[]): void {
     this.accidentSource.next(accidents);
+  }
+
+  resetMapZoom(): void {
+    this.resetZoomSource.next();
   }
 }

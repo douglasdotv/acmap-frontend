@@ -52,4 +52,15 @@ export class NavbarComponent implements OnInit {
       this.mapDataService.updateAccidents(filteredAccidents);
     }
   }
+
+  onReset(): void {
+    this.mapDataService.resetMapZoom();
+    this.searchForm.reset({
+      fatalities: '',
+      operator: '',
+      aircraftType: '',
+      accidentCategory: ''
+    });
+    this.onSearch();
+  }
 }
