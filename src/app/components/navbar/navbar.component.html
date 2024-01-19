@@ -2,9 +2,6 @@
   <div class="container-fluid">
     <form [formGroup]="searchForm" class="d-flex" (ngSubmit)="onSearch()">
       <input formControlName="fatalities" type="number" class="form-control me-2" placeholder="Fatalities">
-      <div *ngIf="searchForm.get('fatalities')?.errors?.['min']">
-        Fatalities must be a non-negative number.
-      </div>
 
       <select formControlName="operator" class="form-select me-2">
         <option value="">Operator</option>

@@ -46,6 +46,11 @@ export class NavbarComponent implements OnInit {
   }
 
   onSearch(): void {
+    if (this.searchForm.value.fatalities < 0) {
+      window.alert('Fatalities must be a non-negative number.');
+      return;
+    }
+
     if (this.searchForm.valid) {
       const form = this.searchForm.value;
       const filteredAccidents = this.accidentService.filterAccidents(form);
