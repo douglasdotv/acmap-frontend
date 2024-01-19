@@ -4,6 +4,7 @@ import { Accident } from '../../models/accident';
 import { AccidentService } from '../../services/accident.service';
 import { MapDataService } from '../../services/map-data.service';
 import { MarkerClusterGroup } from 'leaflet';
+import { LoadingService } from '../../services/loading.service';
 
 declare let L: any;
 type LeafletType = typeof import('leaflet');
@@ -21,7 +22,12 @@ export class MapComponent implements AfterViewInit {
   private map!: L.Map;
   private markers!: MarkerClusterGroup;
 
-  constructor(@Inject(PLATFORM_ID) private platformId: Object, private accidentService: AccidentService, private mapDataService: MapDataService) {}
+  constructor(
+    @Inject(PLATFORM_ID) private platformId: Object, 
+    private accidentService: AccidentService, 
+    private mapDataService: MapDataService,
+    private loadingService: LoadingService
+  ) {}
 
   async ngAfterViewInit(): Promise<void> {
     if (isPlatformBrowser(this.platformId) && L) {
@@ -55,11 +61,16 @@ export class MapComponent implements AfterViewInit {
   }
 
   private fetchAndPlotAccidents(L: LeafletType): void {
+    this.loadingService.showSpinner();
     this.accidentService.getAllAccidents().subscribe({
       next: (accidents) => {
         this.plotAccidentsOnMap(accidents, L);
+        this.loadingService.hideSpinner();
       },
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.loadingService.hideSpinner();
+      },
     });
   }
 
