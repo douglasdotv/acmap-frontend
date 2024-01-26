@@ -29,7 +29,7 @@ export class PopupContentBuilder {
                 <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
                 <p><strong>Summary:</strong> ${accidentCategories}${disputedText}</p>
                 <p><strong>Description:</strong> ${accident.description}</p>
-                <p><strong>Resources:</strong><br>${resourceLinksHtml}</p>
+                <p><strong>Explore:</strong><br>${resourceLinksHtml}</p>
               </div>`;
   }
 
