@@ -61,13 +61,27 @@ export class PopupContentBuilder {
   }
 
   private static getRouteHtml(accident: Accident): string {
-    const departureAirportUrl =
-      this.FLIGHTRADAR_URL + accident.departureAirport.iataCode.toLowerCase();
-    const destinationAirportUrl =
-      this.FLIGHTRADAR_URL + accident.destinationAirport.iataCode.toLowerCase();
-    const stopoversHtml = this.createStopoversHtml(accident.stopovers);
+    const routeParts = [];
 
-    return `${accident.departureAirport.city}, ${accident.departureAirport.country} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>) to ${accident.destinationAirport.city}, ${accident.destinationAirport.country} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)<br>${stopoversHtml}`;
+    const departureAirportUrl = this.FLIGHTRADAR_URL + accident.departureAirport.iataCode.toLowerCase();
+    routeParts.push(`${accident.departureAirport.city} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>)`);
+
+    if (accident.stopovers.length > 0) {
+      const stopoversHtml = this.createStopoversHtml(accident.stopovers);
+      routeParts.push(stopoversHtml);
+    }
+
+    const destinationAirportUrl = this.FLIGHTRADAR_URL + accident.destinationAirport.iataCode.toLowerCase();
+    routeParts.push(`${accident.destinationAirport.city} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)`);
+
+    return routeParts.join(' -> ');
+  }
+  
+  private static createStopoversHtml(stopovers: Stopover[]): string {
+    return stopovers.map((stopover) => {
+      const stopoverUrl = this.FLIGHTRADAR_URL + stopover.airport.iataCode.toLowerCase();
+      return `${stopover.airport.city} (<a href="${stopoverUrl}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
+    }).join(' -> ');
   }
 
   private static getResourceLinksHtml(resources: AccidentResource[]): string {
@@ -77,26 +91,5 @@ export class PopupContentBuilder {
           `<a href="${resource.url}" target="_blank" class="popup-link">${resource.description}</a>`
       )
       .join('<br>');
-  }
-
-  private static createStopoversHtml(stopovers: Stopover[]): string {
-    if (stopovers.length === 0) {
-      return '';
-    }
-
-    return (
-      '(via ' +
-      stopovers
-        .map((stopover, index, array) => {
-          const isLast = index === array.length - 1;
-          let prefix = '';
-          if (index !== 0) {
-            prefix = isLast ? ' and ' : ', ';
-          }
-          return `${prefix}${stopover.airport.city} (<a href="${this.FLIGHTRADAR_URL}${stopover.airport.iataCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
-        })
-        .join('') +
-      ')'
-    );
   }
 }
