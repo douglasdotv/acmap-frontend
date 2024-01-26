@@ -133,7 +133,7 @@ export class MapComponent implements AfterViewInit {
               <p><strong>Location:</strong> ${accident.location} (${accident.country})</p>
               <p><strong>Occupants:</strong> ${accident.occupants}</p>
               <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
-              <p><strong>Aircraft:</strong> ${accident.aircraftType} <a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">(${accident.aircraftRegistration})</a></p>
+              <p><strong>Aircraft:</strong> ${accident.aircraftType} (<a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">${accident.aircraftRegistration}</a>)</p>
               <p><strong>Route:</strong> ${routeHtml}</p>
               <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
               <p><strong>Summary:</strong> ${accidentCategories}${disputedText}</p>
