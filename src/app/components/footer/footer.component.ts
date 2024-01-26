@@ -9,6 +9,7 @@ import { Component } from "@angular/core";
 })
 export class FooterComponent {
   currentYear: number;
+  douglasPage: string = "https://github.com/douglasdotv";
 
   constructor() {
     this.currentYear = new Date().getFullYear();
