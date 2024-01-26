@@ -11,8 +11,8 @@ import { environment } from '../../environments/environment';
 export class AccidentService {
   private readonly API_URL = environment.apiUrl;
   private allAccidents: Accident[] = [];
-  private accidentsSubject = new BehaviorSubject<Accident[]>([]);
-  accidents$ = this.accidentsSubject.asObservable();
+  private accidentsSubject: BehaviorSubject<Accident[]> = new BehaviorSubject<Accident[]>([]);
+  accidents$: Observable<Accident[]> = this.accidentsSubject.asObservable();
 
   constructor(private http: HttpClient) {}
 
