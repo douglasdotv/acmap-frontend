@@ -5,6 +5,7 @@ import { AccidentService } from '../../services/accident.service';
 import { MapDataService } from '../../services/map-data.service';
 import { MarkerClusterGroup } from 'leaflet';
 import { LoadingService } from '../../services/loading.service';
+import { PopupContentBuilder } from './popup-content-builder';
 
 declare let L: any;
 type LeafletType = typeof import('leaflet');
@@ -88,58 +89,12 @@ export class MapComponent implements AfterViewInit {
 
     accidents.forEach((accident) => {
       const marker = L.marker([accident.latitude, accident.longitude], { icon: icon });
-      marker.bindPopup(this.createPopupContent(accident));
+      marker.bindPopup(PopupContentBuilder.buildPopupContent(accident));
       marker.on('mouseover', () => marker.openPopup());
       this.markers.addLayer(marker);
     });
 
     this.map.addLayer(this.markers);
-  }
-
-  private createPopupContent(accident: Accident): string {
-    const flightNumberMatch = /\d+/.exec(accident.flightNumber);
-    const numericFlightNumber = flightNumberMatch ? flightNumberMatch[0] : '';
-    const popupTitle = numericFlightNumber ? accident.operator + ' Flight ' + numericFlightNumber : accident.operator;
-
-    const accidentDate = new Date(accident.date + 'T00:00:00');
-    const formattedAccidentDate = accidentDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-
-    accident.categories.sort((a, b) => a.localeCompare(b));
-    const accidentCategories = accident.categories.map((category, index) => index === 0 ? category : category.toLowerCase()).join(', ');
-    const disputedText = accident.isDisputed ? ' (disputed)' : '';
-    
-    const aircraftRegistrationUrl = 'https://www.airliners.net/search?keywords=' + accident.aircraftRegistration;
-
-    const departureAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.departureAirport.iataCode.toLowerCase();
-    const destinationAirportUrl = 'https://www.flightradar24.com/data/airports/' + accident.destinationAirport.iataCode.toLowerCase();
-    const stopoversHtml = accident.stopovers.length > 0
-    ? '(via ' + accident.stopovers.map((stopover, index, array) => {
-        const isLast = index === array.length - 1;
-        let prefix = '';
-        if (index !== 0) {
-          prefix = isLast ? ' and ' : ', ';
-        }
-        return `${prefix}${stopover.airport.city} (<a href="https://www.flightradar24.com/data/airports/${stopover.airport.iataCode}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
-      }).join('') + ')'
-    : '';
-    const routeHtml = `${accident.departureAirport.city}, ${accident.departureAirport.country} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>) to ${accident.destinationAirport.city}, ${accident.destinationAirport.country} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)<br>${stopoversHtml}`;
-
-    const resourceLinksHtml = accident.resources.map(resource => 
-      `<a href="${resource.url}" target="_blank" class="popup-link">${resource.description}</a>`).join('<br>');
-
-    return `<div class="popup-content">
-              <p class="popup-title">${popupTitle}</p>
-              <p><strong>Date:</strong> ${formattedAccidentDate}</p>
-              <p><strong>Location:</strong> ${accident.location} (${accident.country})</p>
-              <p><strong>Occupants:</strong> ${accident.occupants}</p>
-              <p><strong>Fatalities:</strong> ${accident.fatalities}</p>
-              <p><strong>Aircraft:</strong> ${accident.aircraftType} (<a href="${aircraftRegistrationUrl}" target="_blank" class="popup-link">${accident.aircraftRegistration}</a>)</p>
-              <p><strong>Route:</strong> ${routeHtml}</p>
-              <p><strong>Flight Phase:</strong> ${accident.flightPhase}</p>
-              <p><strong>Summary:</strong> ${accidentCategories}${disputedText}</p>
-              <p><strong>Description:</strong> ${accident.description}</p>
-              <p><strong>Resources:</strong><br>${resourceLinksHtml}</p>
-            </div>`;
   }
 
   private subscribeToAccidentUpdates(L: LeafletType): void {
