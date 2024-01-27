@@ -31,16 +31,19 @@ export class AccidentService {
   }
 
   getOperators(): string[] {
-    return [...new Set(this.allAccidents.map(accident => accident.operator))];
+    const uniqueOperators = [...new Set(this.allAccidents.map(accident => accident.operator))];
+    return uniqueOperators.sort((a, b) => a.localeCompare(b));
   }
 
   getAircraftTypes(): string[] {
-    return [...new Set(this.allAccidents.map(accident => accident.aircraftType))];
+    const uniqueAircraftTypes = [...new Set(this.allAccidents.map(accident => accident.aircraftType))];
+    return uniqueAircraftTypes.sort((a, b) => a.localeCompare(b));
   }
 
   getCategories(): string[] {
     const categories = this.allAccidents.flatMap(accident => accident.categories);
-    return [...new Set(categories)];
+    const uniqueCategories = [...new Set(categories)];
+    return uniqueCategories.sort((a, b) => a.localeCompare(b));
   }
 
   filterAccidents(form: SearchForm): Accident[] {
