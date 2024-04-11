@@ -63,7 +63,8 @@ export class PopupContentBuilder {
   private static getRouteHtml(accident: Accident): string {
     const routeParts = [];
 
-    const departureAirportUrl = this.FLIGHTRADAR_URL + accident.departureAirport.iataCode.toLowerCase();
+    const departureAirportIataCode = accident.departureAirport.iataCode || '';
+    const departureAirportUrl = this.FLIGHTRADAR_URL + departureAirportIataCode.toLowerCase();
     routeParts.push(`${accident.departureAirport.city} (<a href="${departureAirportUrl}" target="_blank" class="popup-link">${accident.departureAirport.icaoCode}</a>)`);
 
     if (accident.stopovers.length > 0) {
@@ -71,7 +72,8 @@ export class PopupContentBuilder {
       routeParts.push(stopoversHtml);
     }
 
-    const destinationAirportUrl = this.FLIGHTRADAR_URL + accident.destinationAirport.iataCode.toLowerCase();
+    const destinationAirportIataCode = accident.destinationAirport.iataCode || '';
+    const destinationAirportUrl = this.FLIGHTRADAR_URL + destinationAirportIataCode.toLowerCase();
     routeParts.push(`${accident.destinationAirport.city} (<a href="${destinationAirportUrl}" target="_blank" class="popup-link">${accident.destinationAirport.icaoCode}</a>)`);
 
     return routeParts.join(' -> ');
@@ -79,7 +81,8 @@ export class PopupContentBuilder {
   
   private static createStopoversHtml(stopovers: Stopover[]): string {
     return stopovers.map((stopover) => {
-      const stopoverUrl = this.FLIGHTRADAR_URL + stopover.airport.iataCode.toLowerCase();
+      const stopoverIataCode = stopover.airport.iataCode || '';
+      const stopoverUrl = this.FLIGHTRADAR_URL + stopoverIataCode.toLowerCase();
       return `${stopover.airport.city} (<a href="${stopoverUrl}" target="_blank" class="popup-link">${stopover.airport.icaoCode}</a>)`;
     }).join(' -> ');
   }
